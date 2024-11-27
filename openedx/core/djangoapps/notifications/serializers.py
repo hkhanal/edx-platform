@@ -226,6 +226,16 @@ def validate_notification_app(notification_app: str) -> str:
     return notification_app
 
 
+def validate_notification_app_enabled(notification_app: str) -> str:
+    """
+    Validate notification app is enabled.
+    """
+
+    if COURSE_NOTIFICATION_APPS.get(notification_app) and COURSE_NOTIFICATION_APPS.get(notification_app)['enabled']:
+        return notification_app
+    raise ValidationError(f'{notification_app} is not a valid notification app.')
+
+
 def validate_notification_type(notification_type: str) -> str:
     """
     Validate notification type value.
@@ -251,7 +261,7 @@ class UserNotificationPreferenceUpdateAllSerializer(serializers.Serializer):
     """
     notification_app = serializers.CharField(
         required=True,
-        validators=[validate_notification_app]
+        validators=[validate_notification_app, validate_notification_app_enabled]
     )
     value = serializers.BooleanField(required=False)
     notification_type = serializers.CharField(
@@ -288,10 +298,7 @@ class UserNotificationPreferenceUpdateAllSerializer(serializers.Serializer):
             })
 
         # Validate notification type
-        if (
-            COURSE_NOTIFICATION_TYPES.get(notification_type)
-            or notification_type == "core"
-        ):
+        if all([not COURSE_NOTIFICATION_TYPES.get(notification_type), notification_type != "core"]):
             raise ValidationError(f'{notification_type} is not a valid notification type.')
 
         # Validate notification type and channel is editable

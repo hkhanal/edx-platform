@@ -1162,6 +1162,18 @@ class UpdateAllNotificationPreferencesViewTests(APITestCase):
                 'Weekly'
             )
 
+    @patch.dict('openedx.core.djangoapps.notifications.serializers.COURSE_NOTIFICATION_APPS', {
+        **COURSE_NOTIFICATION_APPS,
+        'grading': {
+            'enabled': False,
+            'core_info': 'Notifications for submission grading.',
+            'core_web': True,
+            'core_email': True,
+            'core_push': True,
+            'core_email_cadence': 'Daily',
+            'non_editable': []
+        }
+    })
     def test_update_disabled_app(self):
         """
         Test updating notification for a disabled app
@@ -1180,7 +1192,6 @@ class UpdateAllNotificationPreferencesViewTests(APITestCase):
             'value': False
         }
         response = self.client.post(self.url, data, format='json')
-
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(response.data['status'], 'error')
 
