@@ -1695,8 +1695,6 @@ INSTALLED_APPS = [
     # New (Learning-Core-based) XBlock runtime
     'openedx.core.djangoapps.xblock.apps.StudioXBlockAppConfig',
 
-    # Maintenance tools
-    'cms.djangoapps.maintenance',
     'openedx.core.djangoapps.util.apps.UtilConfig',
 
     # Tracking
@@ -2734,7 +2732,7 @@ PASSWORD_RESET_IP_RATE = '1/m'
 PASSWORD_RESET_EMAIL_RATE = '2/h'
 
 ######################## Setting for content libraries ########################
-MAX_BLOCKS_PER_CONTENT_LIBRARY = 1000
+MAX_BLOCKS_PER_CONTENT_LIBRARY = 100_000
 
 ################# Student Verification #################
 VERIFY_STUDENT = {

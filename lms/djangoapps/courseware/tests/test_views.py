@@ -1472,8 +1472,8 @@ class ProgressPageTests(ProgressPageBaseTests):
             self.assertContains(resp, "earned a certificate for this course.")
 
     @ddt.data(
-        (True, 53),
-        (False, 53),
+        (True, 54),
+        (False, 54),
     )
     @ddt.unpack
     def test_progress_queries_paced_courses(self, self_paced, query_count):
@@ -1488,13 +1488,13 @@ class ProgressPageTests(ProgressPageBaseTests):
         ContentTypeGatingConfig.objects.create(enabled=True, enabled_as_of=datetime(2018, 1, 1))
         self.setup_course()
         with self.assertNumQueries(
-            53, table_ignorelist=QUERY_COUNT_TABLE_IGNORELIST
+            54, table_ignorelist=QUERY_COUNT_TABLE_IGNORELIST
         ), check_mongo_calls(2):
             self._get_progress_page()
 
         for _ in range(2):
             with self.assertNumQueries(
-                38, table_ignorelist=QUERY_COUNT_TABLE_IGNORELIST
+                39, table_ignorelist=QUERY_COUNT_TABLE_IGNORELIST
             ), check_mongo_calls(2):
                 self._get_progress_page()
 
@@ -3777,7 +3777,7 @@ class TestCoursewareMFESearchAPI(SharedModuleStoreTestCase):
     @override_waffle_flag(COURSEWARE_MICROFRONTEND_SEARCH_ENABLED, active=False)
     def test_is_mfe_search_waffle_disabled(self):
         """
-        Courseware search is only available when the waffle flag is enabled.
+        Courseware search is only available when the waffle flag is enabled, if no inclusion date is provided.
         """
         user_admin = UserFactory(is_staff=True, is_superuser=True)
         CourseEnrollmentFactory.create(user=user_admin, course_id=self.course.id, mode=CourseMode.VERIFIED)
@@ -3789,6 +3789,7 @@ class TestCoursewareMFESearchAPI(SharedModuleStoreTestCase):
         self.assertEqual(body, {'enabled': False})
 
     @patch.dict('django.conf.settings.FEATURES', {'COURSEWARE_SEARCH_INCLUSION_DATE': '2020'})
+    @override_waffle_flag(COURSEWARE_MICROFRONTEND_SEARCH_ENABLED, active=False)
     @ddt.data(
         (datetime(2013, 9, 18, 11, 30, 00), False),
         (None, False),
