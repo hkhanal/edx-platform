@@ -285,7 +285,7 @@ if os.environ.get("READTHEDOCS", "") == "True":
 
 # Example configuration for intersphinx: refer to the Python standard library.
 intersphinx_mapping = {
-    'django': ('https://docs.djangoproject.com/en/1.11/', 'https://docs.djangoproject.com/en/1.11/_objects/'),
+    'django': ('https://docs.djangoproject.com/en/4.2/', 'https://docs.djangoproject.com/en/4.2/_objects/'),
 }
 
 # Start building a map of the directories relative to the repository root to
